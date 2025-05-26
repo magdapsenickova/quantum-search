@@ -1,32 +1,26 @@
-# trying to add??
-
+# warning: nonsense
 import pennylane as qml
-import matplotlib.pyplot as plt
-import numpy as np
 
-x = 1
-k = 3
-mod = 7
+dev = qml.device('default.qubit', wires=6)
 
-x_wires =[0,1,2,3]
-work_wires=[4,5]
+X = [1,1,1]
+Y = [1,0,1]
+x_wires = [0,1,2]
+work_wires = [4,5]
+output_wires = [6,7]
+mod = 2
 
-basis_state = [1, 0]
-
-dev = qml.device("default.qubit", wires=2)
-
-dev = qml.device("default.qubit", shots=1)
 @qml.qnode(dev)
-def circuit():
-    qml.BasisEmbedding(x, wires=x_wires)
-    qml.Adder(k, x_wires, mod, work_wires)
-    return qml.sample(wires=x_wires)
+def circuit2(feature):
+    qml.BasisEmbedding(features=feature, wires=range(3))
+    qml.CNOT(wires=[0,1])
+    qml.CNOT(wires=[0,2])
+    qml.Adder(1, x_wires[0], mod, work_wires=work_wires)
+    qml.Adder(1, x_wires[1], mod, work_wires=work_wires)
+    qml.Adder(1, x_wires[2], mod, work_wires=work_wires)
+    qml.OutAdder(X, x_wires, output_wires=output_wires, work_wires=work_wires)
+    return qml.state()
 
-state = circuit()
+state = circuit2(Y)
 
 print(state)
-
-
-
-
-
